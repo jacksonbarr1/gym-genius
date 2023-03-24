@@ -1,18 +1,31 @@
 package com.example.gymgenius.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.gymgenius.dto.UserDTO;
+import com.example.gymgenius.entity.GymGeniusUser;
+import com.example.gymgenius.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/home")
+@RequestMapping("/api")
+@RequiredArgsConstructor
 public class HomeController {
+
+    private final UserService userService;
 
     @ResponseBody
     @GetMapping
-    public String home() {
-        return "Hello GymGenius";
+    public ResponseEntity<String> home() {
+        return ResponseEntity.ok("Hello GymGenius");
     }
+
+    @ResponseBody
+    @PostMapping("/register")
+    public ResponseEntity<GymGeniusUser> register(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.register(userDTO));
+    }
+
+
 
 }
