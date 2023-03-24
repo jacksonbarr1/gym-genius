@@ -31,16 +31,20 @@ public class SecurityConfig {
 
         http
                 .csrf().disable()
-                .headers().frameOptions().disable()
-                .and()
+                .headers().frameOptions().disable();
+
+        http
                 .authorizeHttpRequests()
-                .requestMatchers("/user")
-                .permitAll()
-                .and()
+                .requestMatchers("/user/register", "/user/authenticate")
+                .permitAll();
+
+        http
                 .authorizeHttpRequests()
                 .anyRequest()
-                .authenticated()
-                .and()
+                .authenticated();
+
+        // Configure session management, add authentication provider, add JWTAuthFilter in chain
+        http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
