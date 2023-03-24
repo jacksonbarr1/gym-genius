@@ -18,7 +18,7 @@ public class GymGeniusUser implements UserDetails {
     private String password;
     private boolean enabled;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_authorities",
     joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "authority")
