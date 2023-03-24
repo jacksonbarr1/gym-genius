@@ -20,11 +20,7 @@ public class HomeController {
         return ResponseEntity.ok("Hello GymGenius");
     }
 
-    @ResponseBody
-    @PostMapping("/register")
-    public ResponseEntity<GymGeniusUser> register(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.register(userDTO));
-    }
+
 
 
 
