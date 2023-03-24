@@ -3,9 +3,14 @@ package com.example.gymgenius.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import jakarta.websocket.Decoder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +20,7 @@ import java.util.function.Function;
 @Component
 public class JWTUtils {
 
-    private String jwtSigningKey = "secret";
+    private final String jwtSigningKey = "y$B&E)H@McQeThWmZq4t7w!z%C*F-JaN";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -64,5 +69,10 @@ public class JWTUtils {
     public Boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    private Key getSignInKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }
