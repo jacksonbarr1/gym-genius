@@ -1,0 +1,6 @@
+spring:
+  config:
+    name: application-dev.yml
+    location: ./config
+server:
+  port: 8081
