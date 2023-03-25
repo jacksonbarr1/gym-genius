@@ -1,5 +1,6 @@
 package com.example.gymgenius.entity;
 
+import com.example.gymgenius.dto.UserDTO;
 import com.example.gymgenius.security.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -43,6 +44,18 @@ public class GymGeniusUser implements UserDetails {
         this.password = password;
         this.enabled = true;
         this.role = Role.USER;
+    }
+
+
+    public static GymGeniusUser gymGeniusUserFactory(UserDTO userDTO) {
+        return builder()
+                .email(userDTO.getEmail())
+                .password(userDTO.getPassword())
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .enabled(true)
+                .role(Role.USER)
+                .build();
     }
 
 
