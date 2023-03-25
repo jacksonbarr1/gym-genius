@@ -53,7 +53,7 @@ public class UserController {
 
     @ResponseBody
     @PreAuthorize("#id == authentication.principal.id")
-    @PutMapping("/{id:\\d+}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<GymGeniusUser> getUserById(@PathVariable Integer id) throws Exception {
         if (!userService.idExists(id)) {
             throw new Exception("Existing user not found with id: " + id);
