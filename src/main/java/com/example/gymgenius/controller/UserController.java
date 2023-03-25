@@ -2,12 +2,15 @@ package com.example.gymgenius.controller;
 
 import com.example.gymgenius.dto.AuthenticationRequest;
 import com.example.gymgenius.dto.AuthenticationResponse;
+import com.example.gymgenius.dto.RegistrationRequest;
 import com.example.gymgenius.dto.UserDTO;
 import com.example.gymgenius.entity.GymGeniusUser;
 import com.example.gymgenius.security.JWTUtils;
 import com.example.gymgenius.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,10 +41,24 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request) {
-        UserDTO userDTO = new UserDTO(request.getEmail(), request.getPassword());
-        GymGeniusUser user = userService.register(userDTO);
-        return authenticate(request);
+    public ResponseEntity<GymGeniusUser> register(@RequestBody RegistrationRequest request) {
+        UserDTO userDTO = UserDTO.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .build();
+        return ResponseEntity.ok(userService.register(userDTO));
+    }
+
+    @ResponseBody
+    @PreAuthorize("#id == authentication.principal.id")
+    @PutMapping("/{id:\\d+}")
+    public ResponseEntity<GymGeniusUser> updateUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) throws Exception {
+        if (userService.findById(id) == null) {
+            throw new Exception("Existing user not found with id: " + id);
+        }
+        return ResponseEntity.ok(userService.updateById(id, userDTO));
     }
 
     @ResponseBody

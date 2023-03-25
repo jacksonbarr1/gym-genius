@@ -3,11 +3,15 @@ package com.example.gymgenius.service;
 import com.example.gymgenius.dto.UserDTO;
 import com.example.gymgenius.entity.GymGeniusUser;
 import com.example.gymgenius.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class UserService {
 
@@ -16,10 +20,30 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public GymGeniusUser register(UserDTO userDTO) {
-        GymGeniusUser user = new GymGeniusUser(userDTO.getEmail(), passwordEncoder.encode(userDTO.getPassword()));
-        userRepository.save(user);
-        return user;
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        GymGeniusUser user = GymGeniusUser.gymGeniusUserFactory(userDTO);
+        return userRepository.save(user);
+    }
+
+    public GymGeniusUser updateById(Integer id, UserDTO userDTO) throws Exception {
+        GymGeniusUser oldUser = userRepository.findById(id).orElseThrow(() -> new Exception("Resource not found"));
+        if (userDTO.getEmail() != null && !Objects.equals(userDTO.getEmail(), oldUser.getEmail())) {
+            oldUser.setEmail(userDTO.getEmail());
+        }
+
+        if (userDTO.getFirstName() != null && !Objects.equals(userDTO.getFirstName(), oldUser.getFirstName())) {
+            oldUser.setFirstName(userDTO.getFirstName());
+        }
+
+        if (userDTO.getLastName() != null && !Objects.equals(userDTO.getLastName(), oldUser.getLastName())) {
+            oldUser.setLastName(userDTO.getLastName());
+        }
+        return userRepository.save(oldUser);
+
     }
 
 
+    public GymGeniusUser findById(Integer id) {
+        return userRepository.findById(id).orElse(null);
+    }
 }
