@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,6 +37,10 @@ public class GymGeniusUser implements UserDetails {
     private boolean enabled;
     private String firstName;
     private String lastName;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Workout> workouts;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -44,6 +49,7 @@ public class GymGeniusUser implements UserDetails {
         this.password = password;
         this.enabled = true;
         this.role = Role.USER;
+        this.workouts = new ArrayList<>();
     }
 
 
@@ -53,6 +59,7 @@ public class GymGeniusUser implements UserDetails {
                 .password(userDTO.getPassword())
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
+                .workouts(new ArrayList<>())
                 .enabled(true)
                 .role(Role.USER)
                 .build();

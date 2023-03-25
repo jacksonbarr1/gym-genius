@@ -2,12 +2,16 @@ package com.example.gymgenius.service;
 
 import com.example.gymgenius.dto.UserDTO;
 import com.example.gymgenius.entity.GymGeniusUser;
+import com.example.gymgenius.entity.Workout;
 import com.example.gymgenius.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -38,8 +42,14 @@ public class UserService {
         if (userDTO.getLastName() != null && !Objects.equals(userDTO.getLastName(), oldUser.getLastName())) {
             oldUser.setLastName(userDTO.getLastName());
         }
-        return userRepository.save(oldUser);
 
+        return userRepository.save(oldUser);
+    }
+
+    public GymGeniusUser addWorkoutById(Integer id, Workout workout) throws Exception {
+        GymGeniusUser oldUser = userRepository.findById(id).orElseThrow(() -> new Exception("Resource not found"));
+        oldUser.getWorkouts().add(workout);
+        return userRepository.save(oldUser);
     }
 
 
@@ -53,5 +63,11 @@ public class UserService {
 
     public void deleteById(Integer id) {
         userRepository.deleteById(id);
+    }
+
+    public int getIdFromAuthentication(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        GymGeniusUser user = userRepository.findGymGeniusUserByEmail(userDetails.getUsername());
+        return user.getId();
     }
 }
