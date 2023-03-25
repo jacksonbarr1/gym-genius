@@ -46,4 +46,12 @@ public class UserService {
     public GymGeniusUser findById(Integer id) {
         return userRepository.findById(id).orElse(null);
     }
+
+    public boolean idExists(Integer id) {
+        return findById(id) != null;
+    }
+
+    public void deleteById(Integer id) {
+        userRepository.deleteById(id);
+    }
 }

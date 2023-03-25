@@ -54,11 +54,32 @@ public class UserController {
     @ResponseBody
     @PreAuthorize("#id == authentication.principal.id")
     @PutMapping("/{id:\\d+}")
-    public ResponseEntity<GymGeniusUser> updateUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) throws Exception {
-        if (userService.findById(id) == null) {
+    public ResponseEntity<GymGeniusUser> getUserById(@PathVariable Integer id) throws Exception {
+        if (!userService.idExists(id)) {
+            throw new Exception("Existing user not found with id: " + id);
+        }
+        return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @ResponseBody
+    @PreAuthorize("#id == authentication.principal.id")
+    @PutMapping("/{id:\\d+}")
+    public ResponseEntity<GymGeniusUser> updateUserById(@PathVariable Integer id, @RequestBody UserDTO userDTO) throws Exception {
+        if (!userService.idExists(id)) {
             throw new Exception("Existing user not found with id: " + id);
         }
         return ResponseEntity.ok(userService.updateById(id, userDTO));
+    }
+
+    @ResponseBody
+    @PreAuthorize("#id == authentication.principal.id")
+    @DeleteMapping("/{id:\\d+}")
+    public ResponseEntity<String> deleteUserById(@PathVariable Integer id) throws Exception {
+        if (!userService.idExists(id)) {
+            throw new Exception("Existing user not found with id: " + id);
+        }
+        userService.deleteById(id);
+        return ResponseEntity.ok("User deleted with id: " + id);
     }
 
     @ResponseBody
@@ -66,4 +87,5 @@ public class UserController {
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("GODO");
     }
+
 }
