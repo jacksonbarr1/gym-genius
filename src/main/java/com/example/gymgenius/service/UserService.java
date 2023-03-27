@@ -20,8 +20,6 @@ import java.util.Objects;
 @Transactional
 @RequiredArgsConstructor
 public class UserService {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -29,14 +27,11 @@ public class UserService {
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         GymGeniusUser user = GymGeniusUser.gymGeniusUserFactory(userDTO);
         userRepository.save(user);
-
-        logger.info("New user registration: " + user);
         return user;
     }
 
     public GymGeniusUser updateById(Integer id, UserDTO userDTO) throws Exception {
         GymGeniusUser oldUser = userRepository.findById(id).orElseThrow(() -> new Exception("Resource not found"));
-        logger.info("User updating in progress: " + oldUser);
         if (userDTO.getEmail() != null && !Objects.equals(userDTO.getEmail(), oldUser.getEmail())) {
             oldUser.setEmail(userDTO.getEmail());
         }
@@ -48,7 +43,6 @@ public class UserService {
         if (userDTO.getLastName() != null && !Objects.equals(userDTO.getLastName(), oldUser.getLastName())) {
             oldUser.setLastName(userDTO.getLastName());
         }
-        logger.info("User updated: " + oldUser);
 
         return userRepository.save(oldUser);
     }
@@ -57,21 +51,12 @@ public class UserService {
         GymGeniusUser oldUser = userRepository.findById(id).orElseThrow(() -> new Exception("Resource not found"));
         oldUser.getWorkouts().add(workout);
         userRepository.save(oldUser);
-        logger.info("Workout " + workout.getName() + " added to user: " + oldUser);
         return oldUser;
     }
 
 
     public GymGeniusUser findById(Integer id) {
-        logger.info("Searching for user with id: " + id);
-        GymGeniusUser result = userRepository.findById(id).orElse(null);
-        if (result == null) {
-            logger.debug("No user with id: " + id);
-        } else {
-            logger.info("User found: " + result);
-        }
-
-        return result;
+        return userRepository.findById(id).orElse(null);
     }
 
     public boolean idExists(Integer id) {
@@ -79,14 +64,7 @@ public class UserService {
     }
 
     public void deleteById(Integer id) {
-        logger.info("Deleting user with id: " + id);
-        if (findById(id) != null) {
-            userRepository.deleteById(id);
-            logger.info("Deleted user with id: " + id);
-        } else {
-            logger.debug("Could not delete user");
-        }
-
+        userRepository.deleteById(id);
     }
 
     public int getIdFromAuthentication(Authentication authentication) {
