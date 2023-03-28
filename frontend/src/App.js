@@ -2,20 +2,18 @@ import './App.css';
 import Register from "./components/Register";
 import Login from "./components/Login";
 import React from 'react';
-import {BrowserRouter as Router, Link, Route, Routes} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import Navbar from "./components/Navbar";
+import { useSelector } from "react-redux";
 
 function App() {
 
-  const padding = {
-    padding: 5
-  }
+  const state = useSelector(state => state)
 
   return (
-    <Router>
-      <Link style={padding} to="/">Home</Link>
-      <Link style={padding} to="/register">Register</Link>
-        <Link style={padding} to="/login">Login</Link>
 
+    <Router>
+        <Navbar isAuthenticated={state.userAuthentication.isAuthenticated}></Navbar>
       <Routes>
         <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
