@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import authenticationService from "../services/authenticationService";
+import {loginFailure, loginSuccess} from "../reducers/authenticationReducer";
+import {useDispatch} from "react-redux";
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const dispatch = useDispatch()
 
     const style1 = {
         backgroundColor: "#eee",
@@ -17,33 +22,20 @@ function Login() {
     const handlePasswordChange = event => setPassword(event.target.value);
 
     const handleSubmit = async (event) => {
+        console.log("HANDLE SUBMIT")
         event.preventDefault();
         const requestBody = {
             email: email,
             password: password
         };
-
-        await fetch('http://localhost:8081/user/authenticate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Login success!')
-                    return response.json();
-                } else {
-                    console.error("Login failed")
-                }
-            })
-            .catch(error => console.error(error))
-            .then(data => {
-                const token = data.token;
-                console.log(token);
-            })
-            .catch(error => console.error(error))
+        const authenticationResponse = await authenticationService.logIn(requestBody)
+        if (authenticationResponse.token === null) {
+            dispatch(loginFailure(authenticationResponse))
+            console.error("LOGIN FAILURE", authenticationResponse)
+        } else {
+            dispatch(loginSuccess(authenticationResponse))
+            console.log("LOGIN SUCCESS", authenticationResponse)
+        }
     }
 
     return (
@@ -63,7 +55,7 @@ function Login() {
                                             <div className="d-flex flex-row align-items-center mb-4">
                                                 <i className="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                                 <div className="form-outline flex-fill mb-0">
-                                                    <input type="email" id="form3Example3c" className="form-control" value={email} onChange={handleEmailChange}/>
+                                                    <input type="email" id="form3Example3c" className="form-control" value={email} onChange={handleEmailChange} name="email"/>
                                                     <label className="form-label" htmlFor="form3Example3c">Your
                                                         Email</label>
                                                 </div>
@@ -73,7 +65,7 @@ function Login() {
                                                 <i className="fas fa-lock fa-lg me-3 fa-fw"></i>
                                                 <div className="form-outline flex-fill mb-0">
                                                     <input type="password" id="form3Example4c"
-                                                           className="form-control" value={password} onChange={handlePasswordChange}/>
+                                                           className="form-control" value={password} onChange={handlePasswordChange} name="password"/>
                                                     <label className="form-label"
                                                            htmlFor="form3Example4c">Password</label>
                                                 </div>
