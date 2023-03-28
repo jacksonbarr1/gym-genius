@@ -11,7 +11,7 @@ const authenticationSlice = createSlice({
     reducers: {
         loginSuccess(state, action) {
             state.isAuthenticated = true;
-            state.user = action.payload;
+            state.user = action.payload.user;
         },
         loginFailure(state, action) {
             state.isAuthenticated = false;
@@ -23,7 +23,7 @@ const authenticationSlice = createSlice({
             state.user = null;
         },
         updateUserSuccess(state, action) {
-            state.user = action.payload;
+            state.user = action.payload.user;
         }
     }
 });
