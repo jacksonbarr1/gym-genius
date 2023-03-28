@@ -3,11 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import authenticationReducer from "./reducers/authenticationReducer";
-import {createStore} from "redux";
 import {Provider} from "react-redux";
+import {combineReducers} from "redux"
+import {configureStore} from "@reduxjs/toolkit";
+import authenticationReducer from "./reducers/authenticationReducer";
 
-const store = createStore(authenticationReducer);
+const rootReducer = combineReducers({
+    userAuthentication: authenticationReducer
+})
+
+
+const store = configureStore({
+    reducer: rootReducer
+})
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
