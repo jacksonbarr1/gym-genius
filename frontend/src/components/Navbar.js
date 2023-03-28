@@ -15,6 +15,7 @@ const Navbar = ({ isAuthenticated }) => {
                     <ul className="navbar-nav me-auto">
                         <li className="nav-item">
                             <Link className="nav-link" to="/">Home</Link>
+                        </li>
                             { isAuthenticated ? (
                                 <>
                                     <li className="nav-item">
@@ -35,7 +36,6 @@ const Navbar = ({ isAuthenticated }) => {
                                 </>
                             )
                             }
-                        </li>
                     </ul>
                 </div>
             </div>
