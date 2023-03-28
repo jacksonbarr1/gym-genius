@@ -3,10 +3,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import authenticationService from "../services/authenticationService";
 import {loginFailure, loginSuccess} from "../reducers/authenticationReducer";
 import {useDispatch} from "react-redux";
+import { useNavigate } from 'react-router-dom'
+import ErrorMessage from "./ErrorMessage";
+
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('')
+    const navigate = useNavigate();
 
     const dispatch = useDispatch()
 
@@ -21,6 +26,10 @@ function Login() {
     const handleEmailChange = event => setEmail(event.target.value);
     const handlePasswordChange = event => setPassword(event.target.value);
 
+    const handleCloseError = () => {
+        setError('')
+    }
+
     const handleSubmit = async (event) => {
         console.log("HANDLE SUBMIT")
         event.preventDefault();
@@ -30,13 +39,15 @@ function Login() {
         };
         setEmail('')
         setPassword('')
-        const authenticationResponse = await authenticationService.logIn(requestBody)
-        if (authenticationResponse.token === null) {
-            dispatch(loginFailure(authenticationResponse))
-            console.error("LOGIN FAILURE", authenticationResponse)
-        } else {
-            dispatch(loginSuccess(authenticationResponse))
-            console.log("LOGIN SUCCESS", authenticationResponse)
+        try {
+            const response = await authenticationService.logIn(requestBody)
+            console.log(response.status)
+            if (response.status === 200) {
+                dispatch(loginSuccess(response.data))
+                navigate('/profile', {replace: true})
+            }
+        } catch (error) {
+            setError('An error occurred while logging in')
         }
     }
 
@@ -49,6 +60,7 @@ function Login() {
                             <div className="card-body p-md-5">
                                 <div className="row justify-content-center">
                                     <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                        {error && <ErrorMessage message={error} onClose={handleCloseError}></ErrorMessage>}
 
                                         <p className="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Log In</p>
 
