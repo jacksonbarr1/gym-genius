@@ -28,6 +28,8 @@ function Login() {
             email: email,
             password: password
         };
+        setEmail('')
+        setPassword('')
         const authenticationResponse = await authenticationService.logIn(requestBody)
         if (authenticationResponse.token === null) {
             dispatch(loginFailure(authenticationResponse))
