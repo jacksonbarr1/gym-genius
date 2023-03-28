@@ -8,7 +8,6 @@ import com.example.gymgenius.entity.GymGeniusUser;
 import com.example.gymgenius.security.JWTUtils;
 import com.example.gymgenius.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,7 +34,7 @@ public class UserController {
                 request.getPassword()));
         final GymGeniusUser user = (GymGeniusUser) userDetailsService.loadUserByUsername(request.getEmail());
         if (user != null) {
-            return ResponseEntity.ok(new AuthenticationResponse(jwtUtils.generateToken(user)));
+            return ResponseEntity.ok(new AuthenticationResponse(user, jwtUtils.generateToken(user)));
         }
         return ResponseEntity.status(400).body(new AuthenticationResponse());
     }
