@@ -16,13 +16,16 @@ const Navbar = ({ isAuthenticated }) => {
                         <li className="nav-item">
                             <Link className="nav-link" to="/">Home</Link>
                         </li>
-                            { isAuthenticated ? (
+                            { (localStorage.getItem('isLoggedIn') === 'true') ? (
                                 <>
                                     <li className="nav-item">
                                     <Link className="nav-link" to="/workouts">Workouts</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link" to="/profile">Profile</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/logout">Log Out</Link>
                                     </li>
                                 </>
                             ) : (
