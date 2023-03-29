@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import authenticationService from "../services/authenticationService";
 import {loginFailure, loginSuccess} from "../reducers/authenticationReducer";
 import {useDispatch} from "react-redux";
 import { useNavigate } from 'react-router-dom'
 import ErrorMessage from "./ErrorMessage";
+import logIn from "../services/authenticationService";
 
 
 function Login() {
@@ -40,7 +40,7 @@ function Login() {
         setEmail('')
         setPassword('')
         try {
-            const response = await authenticationService.logIn(requestBody)
+            const response = await logIn(requestBody)
             console.log(response.status)
             if (response.status === 200) {
                 dispatch(loginSuccess(response.data))
