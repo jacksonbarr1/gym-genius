@@ -12,15 +12,18 @@ const authenticationSlice = createSlice({
         loginSuccess(state, action) {
             state.isAuthenticated = true;
             state.user = action.payload.user;
+            localStorage.setItem('isLoggedIn', 'true')
         },
         loginFailure(state, action) {
             state.isAuthenticated = false;
             state.user = null;
             state.error = action.payload;
+            localStorage.setItem('isLoggedIn', 'false')
         },
         logoutSuccess(state, action) {
             state.isAuthenticated = false;
             state.user = null;
+            localStorage.setItem('isLoggedIn', 'false')
         },
         updateUserSuccess(state, action) {
             state.user = action.payload.user;
