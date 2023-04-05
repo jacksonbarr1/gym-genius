@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import { useSelector } from "react-redux";
 import HomePage from "./components/HomePage";
 import LogOut from "./components/LogOut";
+import UserProfile from "./components/UserProfile";
 
 function App() {
 
@@ -20,7 +21,7 @@ function App() {
           <Route exact path="/" element={<HomePage />} />
         <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Register />} />
+          <Route path="/profile" element={<UserProfile />} />
           <Route path="/logout" element={<LogOut />} />
       </Routes>
     </Router>
