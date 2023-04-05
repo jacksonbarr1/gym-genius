@@ -39,7 +39,7 @@ function Register() {
         try {
             const response = await register(requestBody)
             console.log(response.status)
-            if (response.status == 200) {
+            if (response.status === 200) {
                 navigate('/', {replace: true})
             }
         } catch (error) {
