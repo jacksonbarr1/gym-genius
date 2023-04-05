@@ -6,4 +6,11 @@ const logIn = async (userData) => {
     return await axios.post(baseUrl + '/authenticate', userData)
 }
 
-export default logIn
+const register = async (registrationData) => {
+    return await axios.post(baseUrl + '/register', registrationData)
+}
+
+export {
+    logIn,
+    register
+}
