@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {useNavigate} from "react-router-dom";
+import {register} from "../services/authenticationService";
 
 function Register() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+
+    const navigate = useNavigate();
 
     const style1 = {
         backgroundColor: "#eee",
@@ -32,22 +36,16 @@ function Register() {
         if (lastName !== '') {
             requestBody.lastName = lastName;
         }
-        await fetch('http://localhost:8081/user/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(requestBody)
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Registration successful')
-                } else {
-                    console.error('Registration failed')
-                }
-            })
-            .catch(error => console.error(error));
-    };
+        try {
+            const response = await register(requestBody)
+            console.log(response.status)
+            if (response.status == 200) {
+                navigate('/', {replace: true})
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     return (
         <section className="vh-100" style={style1}>
