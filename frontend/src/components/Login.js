@@ -4,7 +4,7 @@ import {loginFailure, loginSuccess} from "../reducers/authenticationReducer";
 import {useDispatch} from "react-redux";
 import { useNavigate } from 'react-router-dom'
 import ErrorMessage from "./ErrorMessage";
-import logIn from "../services/authenticationService";
+import {logIn} from "../services/authenticationService";
 
 
 function Login() {
